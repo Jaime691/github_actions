@@ -1,9 +1,11 @@
 // index.js
-exports.handler = async (event) => {
-    console.log("hello");
+exports.handler = async ( event ) => {
+    const name = event.queryStringParameters?.name || "World";  // Extract 'name' from query params
+    console.log( `Hello, ${ name }` );
+
     return {
         statusCode: 200,
-        body: JSON.stringify('Hello from Lambda!'),
+        body: JSON.stringify( `Hello, ${ name } from Lambda!` ),
     };
 };
 
