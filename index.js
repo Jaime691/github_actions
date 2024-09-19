@@ -1,3 +1,4 @@
+// To check for available models check https://api.openai.com/v1/models with the Api key
 
 exports.handler = async ( event ) => {
     const apiKey = process.env.OPENAI_API_KEY;
@@ -20,7 +21,7 @@ exports.handler = async ( event ) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify( {
-            model: "gpt-4",
+            model: "gpt-3.5-turbo",
             messages: [
                 { role: "system", content: "You are a helpful assistant." },
                 { role: "user", content: event.message }  // Using the event message passed to the Lambda
