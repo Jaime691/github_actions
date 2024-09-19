@@ -1,49 +1,40 @@
-const axios = require( 'axios' );
 
 exports.handler = async ( event ) => {
     const apiKey = process.env.OPENAI_API_KEY;
-
     const userMessage = event.queryStringParameters?.message;
 
     if ( !userMessage ) {
         return {
             statusCode: 400,
-            body: JSON.stringify( { error: "Missing 'message' query parameter" } )
+            body: JSON.stringify( {
+                error: "Missing 'message' query parameter"
+            } )
         };
     }
-
     const url = "https://api.openai.com/v1/chat/completions";
 
-    try {
-        const response = await axios.post( url, {
+    const response = await fetch( url, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${ apiKey }`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify( {
             model: "gpt-4",
             messages: [
                 { role: "system", content: "You are a helpful assistant." },
-                { role: "user", content: userMessage }
+                { role: "user", content: event.message }  // Using the event message passed to the Lambda
             ],
             temperature: 0.7
-        }, {
-            headers: {
-                "Authorization": `Bearer ${ apiKey }`,
-                "Content-Type": "application/json"
-            }
-        } );
+        } )
+    } );
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify( {
-                reply: response.data.choices[ 0 ].message.content  // Return assistant's reply
-            } )
-        };
+    const data = await response.json();
 
-    } catch ( error ) {
-        console.error( "Error calling OpenAI API:", error );
-
-        return {
-            statusCode: 500,
-            body: JSON.stringify( {
-                error: "Failed to get response from OpenAI API"
-            } )
-        };
-    }
+    return {
+        statusCode: 200,
+        body: JSON.stringify( {
+            message: data.choices[ 0 ].message.content
+        } )
+    };
 };
