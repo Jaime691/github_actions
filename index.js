@@ -34,7 +34,7 @@ exports.handler = async ( event ) => {
     return {
         statusCode: 200,
         body: JSON.stringify( {
-            message: data.choices[ 0 ].message.content
+            message: data
         } )
     };
 };
