@@ -1,4 +1,5 @@
-// index.js
+const fetch = require( 'node-fetch' );
+
 exports.handler = async ( event ) => {
     const apiKey = process.env.OPENAI_API_KEY;
     const userMessage = event.queryStringParameters?.message;  // Get 'message' from query params
