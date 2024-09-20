@@ -1,7 +1,7 @@
 // To check for available models check https://api.openai.com/v1/models with the Api key
 
 exports.handler = async ( event ) => {
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
     const userMessage = event.queryStringParameters?.message;
 
     if ( !userMessage ) {
@@ -12,7 +12,7 @@ exports.handler = async ( event ) => {
             } )
         };
     }
-    const url = "https://api.openai.com/v1/chat/completions";
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${ GEMINI_API_KEY }`;
 
     const response = await fetch( url, {
         method: "POST",
@@ -20,14 +20,7 @@ exports.handler = async ( event ) => {
             "Authorization": `Bearer ${ apiKey }`,
             "Content-Type": "application/json"
         },
-        body: JSON.stringify( {
-            model: "gpt-3.5-turbo",
-            messages: [
-                { role: "system", content: "You are a helpful assistant." },
-                { role: "user", content: event.message }  // Using the event message passed to the Lambda
-            ],
-            temperature: 0.7
-        } )
+        data: { "contents": [ { "parts": [ { "text": userMessage } ] } ] },
     } );
 
     const data = await response.json();
