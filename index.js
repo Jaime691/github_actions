@@ -24,20 +24,28 @@ exports.handler = async ( event ) => {
         ]
     };
 
-    const response = await fetch( url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify( data )
-    } );
+    try {
+        const response = await fetch( url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify( data )
+        } );
 
-    const aiResponse = await response.json();
+        const aiResponse = await response.json();
 
-    return {
-        statusCode: 200,
-        body: JSON.stringify( {
-            message: aiResponse
-        } )
-    };
+        return {
+            statusCode: 200,
+            body: JSON.stringify( {
+                message: aiResponse
+            } )
+        };
+    } catch ( error ) {
+        console.error( "Error fetching data from Gemini API:", error );
+        return {
+            statusCode: 500,
+            body: JSON.stringify( { message: "Error fetching data from Gemini API", error: error.toString() } ),
+        };
+    }
 };
