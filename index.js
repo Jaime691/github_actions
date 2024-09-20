@@ -12,12 +12,11 @@ exports.handler = async ( event ) => {
             } )
         };
     }
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${ GEMINI_API_KEY }`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${ apiKey }`;
 
     const response = await fetch( url, {
         method: "POST",
         headers: {
-            "Authorization": `Bearer ${ apiKey }`,
             "Content-Type": "application/json"
         },
         data: { "contents": [ { "parts": [ { "text": userMessage } ] } ] },
